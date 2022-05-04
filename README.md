@@ -3,25 +3,42 @@ My own programming language, using only symbols and numbers. Meant to be program
 
 # EBNF
 
-BLOCK = "{", { STATEMENT }, "}" ;
+`
 
-STATEMENT = ( λ | ASSIGNMENT | PRINT), ";" ;
+    BLOCK = '{' , { STATEMENT }, '}' ;
 
-ASSIGNMENT = IDENTIFIER, "=", EXPRESSION ;
+    STATEMENT = ( λ | ASSIGNMENT | PRINT | DECLARATION), ';';
+                | (BLOCK | WHILE | IF);
 
-PRINT = "$_437_4", "(", EXPRESSION, ")" ;
+    FACTOR = NUMBER | IDENTIFIER | (('+' | '-' | '!') , FACTOR) | '(' , RELEXPRESSION , ')' | SCANF;
 
-EXPRESSION = TERM, { ("+" | "-"), TERM } ;
+    TERM = FACTOR, { ('*' | '/' | '&&'), FACTOR } ;
 
-TERM = FACTOR, { ("*" | "/"), FACTOR } ;
+    EXPRESSION = TERM, { ('+' | '-' | '||'), TERM } ;
 
-FACTOR = (("+" | "-"), FACTOR) | NUMBER | "(", EXPRESSION, ")" | IDENTIFIER ;
+    RELEXPRESSION = EXPRESSION , {('<' | '>' | '==') , EXPRESSION } ;
 
-IDENTIFIER = $, { DIGIT | "_" } ;
+    WHILE = '$_436_2', '(', RELEXPRESSION ,')', STATEMENT;
 
-NUMBER = DIGIT, { DIGIT } ;
+    IF = '$_436_0', '(', RELEXPRESSION ,')', STATEMENT, (('$_436_1', STATEMENT) | λ );
 
-DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
+    ASSIGNMENT = IDENTIFIER, '=' , EXPRESSION ;
+
+    PRINT = '$_436_3', '(' , EXPRESSION, ')' ;
+
+    SCANF = '$_436_4', '(', ')' ;
+
+    IDENTIFIER = $, DIGIT | '_', { DIGIT | '_' } ;
+
+    NUMBER = DIGIT , { DIGIT } ;
+
+    DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
+
+    TYPE = $_719_0 | $_719_1;
+
+    DECLARATION = TYPE, IDENT, ';';
+
+`
 
 # Reserved identifiers
 
