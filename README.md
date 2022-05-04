@@ -1,26 +1,37 @@
 # Numscript
 My own programming language, using only symbols and numbers. Meant to be programmed using only a numpad and a few extra symbols.
 
-# EBNF
+Given the reduced amount of symbols, this language can become rather fast to use with enough practice.
 
-`
+Also worth noting, is the complete lack of letters, which implies complete lack of words, which in turn means that this language does not require prior knowledge of english, or any other language, and can be written in basically any keyboard layout with indo-arabic numerals and some common symbols for maths, such as '+', '-', '*', '/', '$', '{', '}', ',', ';', '(', ')', etc.
+
+# EBNF
 
     BLOCK = '{' , { STATEMENT }, '}' ;
 
-    STATEMENT = ( λ | ASSIGNMENT | PRINT | DECLARATION), ';';
-                | (BLOCK | WHILE | IF);
+    FUNCTION = ( TYPE | $_719_2 ), IDENTIFIER, '(', TYPE, IDENTIFIER, {',', TYPE, IDENTIFIER}, ')', BLOCK ; 
 
-    FACTOR = NUMBER | IDENTIFIER | (('+' | '-' | '!') , FACTOR) | '(' , RELEXPRESSION , ')' | SCANF;
+    STATEMENT = ( λ | ASSIGNMENT | PRINT | DECLARATION | $_436_5, RELEXPRESSION ), ';';
+                | (BLOCK | WHILE | IF | FUNCTION);
 
-    TERM = FACTOR, { ('*' | '/' | '&&'), FACTOR } ;
+    FACTOR = NUMBER | 
+             IDENTIFIER | 
+             ( ( '+' | '-' | '!' ) , FACTOR ) | 
+             '(' , RELEXPRESSION , ')' | 
+             SCANF | 
+             CALL;
 
-    EXPRESSION = TERM, { ('+' | '-' | '||'), TERM } ;
+    CALL = IDENT, '(', λ | RELEXPRESSION, {',', RELEXRESSION}, ')', ';';
 
-    RELEXPRESSION = EXPRESSION , {('<' | '>' | '==') , EXPRESSION } ;
+    TERM = FACTOR, { ( '*' | '/' | '&&' ), FACTOR } ;
+
+    EXPRESSION = TERM, { ( '+' | '-' | '||' ), TERM } ;
+
+    RELEXPRESSION = EXPRESSION , { ( '<' | '>' | '==' ) , EXPRESSION } ;
 
     WHILE = '$_436_2', '(', RELEXPRESSION ,')', STATEMENT;
 
-    IF = '$_436_0', '(', RELEXPRESSION ,')', STATEMENT, (('$_436_1', STATEMENT) | λ );
+    IF = '$_436_0', '(', RELEXPRESSION ,')', STATEMENT, ( ( '$_436_1', STATEMENT ) | λ );
 
     ASSIGNMENT = IDENTIFIER, '=' , EXPRESSION ;
 
@@ -38,7 +49,6 @@ My own programming language, using only symbols and numbers. Meant to be program
 
     DECLARATION = TYPE, IDENT, ';';
 
-`
 
 # Reserved identifiers
 
@@ -49,6 +59,7 @@ My own programming language, using only symbols and numbers. Meant to be program
 | $_436_2       	|  while      	                        |
 | $_436_3       	|  printf      	                        |
 | $_436_4       	|  scanf      	                        |
+| $_436_5       	|  return      	                        |
 | $_719_0       	|  int      	                        |
 | $_719_1       	|  str      	                        |
 | $_719_2       	|  void      	                        |
