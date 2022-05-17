@@ -24,11 +24,11 @@ Heavily based on https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
 
     CALL = IDENT, '(', λ | RELEXPRESSION, {',', RELEXRESSION}, ')', ';';
 
-    TERM = FACTOR, { ( '*' | '/' | '&&' ), FACTOR } ;
-
     EXPRESSION = TERM, { ( '+' | '-' | '||' ), TERM } ;
 
-    RELEXPRESSION = EXPRESSION , { ( '<' | '>' | '==' | '!=' | '<=' | '>=') , EXPRESSION } ;
+    TERM = FACTOR, { ( '*' | '/' | '&&' ), FACTOR } ;
+
+    RELEXPRESSION = EXPRESSION | EXPRESSION , ( '<' | '>' | '==' | '!=' | '<=' | '>=') , EXPRESSION ;
 
     WHILE = '$_436_2', '(', RELEXPRESSION ,')', STATEMENT;
 
