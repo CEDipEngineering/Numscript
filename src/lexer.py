@@ -7,12 +7,6 @@ class Lexer():
 
     def _add_tokens(self):
 
-        # Types and Values
-        # self.lexer.add('INT', r'$_157')
-        self.lexer.add('NUMBER', r'\d+')
-        # self.lexer.add('SEMICOL', r'\;')
-        # self.lexer.add('IDENTIFIER', r'\$[0-9_]+')
-
         # Arithmetic
         self.lexer.add('MUL', r'\*')
         self.lexer.add('DIV', r'/')
@@ -29,18 +23,24 @@ class Lexer():
         self.lexer.add('NOT', r'\!')
         self.lexer.add('OP', r'\(')
         self.lexer.add('CP', r'\)')
-        # self.lexer.add('OCB', r'\{')
-        # self.lexer.add('CCB', r'\}')
+        self.lexer.add('OCB', r'\{')
+        self.lexer.add('CCB', r'\}')
         self.lexer.add('OR', r'\|\|')
         self.lexer.add('AND', r'\&\&')
 
         # Reserved
-        # self.lexer.add('ASSIGN', r'\=')
+        self.lexer.add('ASSIGN', r'\=')
         # self.lexer.add('IF', r'$_436_0')
         # self.lexer.add('ELSE', r'$_436_1')
         # self.lexer.add('WHILE', r'$_436_2')
-        # self.lexer.add('PRINT', r'$_436_3')
+        self.lexer.add('PRINT', r'\$\_436\_3')
         # self.lexer.add('RETURN', r'$_436_5')
+
+        # Types and Values
+        # self.lexer.add('INT', r'$_157')
+        self.lexer.add('NUMBER', r'\d+')
+        self.lexer.add('SEMICOL', r'\;')
+        self.lexer.add('IDENTIFIER', r'\$[0-9_]+')
 
         self.lexer.ignore('\s+')
 

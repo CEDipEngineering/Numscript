@@ -1,7 +1,7 @@
 from logging.config import IDENTIFIER
+from sre_constants import ASSERT
 from rply import ParserGenerator
-from ast import Sum, Number, Sub, Mult, Div, GT, LT, EQ, NE, GTE, LTE, Or, And, UnSum, UnSub, Negate
-
+from ast import Sum, Number, Sub, Mult, Div, GT, LT, EQ, NE, GTE, LTE, Or, And, UnSum, UnSub, Negate, Identifier, Assign, Print, Block
 
 class Parser():
     def __init__(self):
@@ -24,21 +24,67 @@ class Parser():
              'GTE',
              'OP', 
              'CP', 
-            #  'INT', 
-            #  'SEMICOL', 
-            #  'IDENTIFIER',
-            #  'OCB', 
-            #  'CCB', 
-            #  'ASSIGN', 
+             'IDENTIFIER',
+             'ASSIGN', 
+             'SEMICOL', 
+             'OCB', 
+             'CCB', 
+             'PRINT', 
             #  'IF', 
             #  'ELSE', 
             #  'WHILE', 
-            #  'PRINT', 
             #  'RETURN',
+            #  'INT', 
              ]
         )
 
     def parse(self):
+
+        #########
+        #-Block-#
+        #########
+        @self.pg.production('block : OCB statements CCB')
+        def block(p):
+            return p[1]
+        
+        @self.pg.production('statements : statement')
+        def statements(p):
+            return Block(p[0])
+        
+        @self.pg.production('statements : statements statement')
+        def statements(p):
+            p[0].append(p[1])
+            return p[0]
+
+        #############
+        #-Statement-#
+        #############
+        @self.pg.production('statement : SEMICOL')
+        @self.pg.production('statement : PRINT')
+        def statement(p):
+            if p[0].gettokentype() == 'SEMICOL':
+                return
+            return p[0]
+
+        @self.pg.production('statement : assignment')
+        def statement(p):
+            return p[0]
+        
+        #########
+        #-Print-#
+        #########
+        @self.pg.production('statement : PRINT OP relexpr CP SEMICOL')
+        def statement(p):
+            return Print(p[2])
+
+        ##############
+        #-Assignment-#
+        ##############
+        @self.pg.production('assignment : IDENTIFIER ASSIGN relexpr SEMICOL')
+        def assignment(p):
+            ident = p[0].getstr()
+            val = p[2]
+            return Assign(ident, val)
 
 
         ###########
@@ -131,15 +177,15 @@ class Parser():
         #-Factor-#
         ##########
         # Single token
-        @self.pg.production('factor : NUMBER')
-        # @self.pg.production('factor : IDENTIFIER')
         # @self.pg.production('factor : CALL')
+        @self.pg.production('factor : NUMBER')
+        @self.pg.production('factor : IDENTIFIER')
         def factor(p):
             valType = p[0].gettokentype()
             if valType == 'NUMBER':
                 return Number(p[0].getstr())
-            # elif valType == 'IDENTIFIER':
-            #     return 
+            elif valType == 'IDENTIFIER':
+                return Identifier(p[0].getstr())
             # elif valType == 'CALL':
             #     return 
             else:
@@ -164,7 +210,7 @@ class Parser():
         # Parentheses
         @self.pg.production('factor : OP relexpr CP')
         def factor(p):
-            return p[1]
+            return p[1]       
 
         @self.pg.error
         def error_handle(token):
