@@ -16,11 +16,11 @@ Heavily based on https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
     STATEMENT = ( λ | ASSIGNMENT | PRINT | DECLARATION | $_436_5, RELEXPRESSION ), ';';
                 | (BLOCK | WHILE | IF | FUNCTION);
 
-    FACTOR = NUMBER | 
-             IDENTIFIER | 
-             ( ( '+' | '-' | '!' ) , FACTOR ) | 
-             '(' , RELEXPRESSION , ')' | 
-             CALL;
+    FACTOR = NUMBER 
+            | IDENTIFIER  
+            | ( ( '+' | '-' | '!' ) , FACTOR )  
+            | '(' , RELEXPRESSION , ')'
+            | CALL;
 
     CALL = IDENT, '(', λ | RELEXPRESSION, {',', RELEXRESSION}, ')', ';';
 
@@ -44,9 +44,7 @@ Heavily based on https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
 
     DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
 
-    TYPE = $_719_0 | $_719_1;
-
-    DECLARATION = TYPE, IDENT, ';';
+    DECLARATION = $_157, IDENT, ';';
 
 
 # Reserved identifiers
@@ -58,5 +56,4 @@ Heavily based on https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/
 | $_436_2       	|  while      	                        |
 | $_436_3       	|  printf      	                        |
 | $_436_5       	|  return      	                        |
-| $_719_0       	|  int      	                        |
-| $_719_1       	|  void      	                        |
+| $_157            	|  int      	                        |
