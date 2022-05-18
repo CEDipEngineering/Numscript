@@ -207,3 +207,6 @@ class Call():
                 ST_func.assign(arg, par.eval(ST))
         # print(block.children)
         block.eval(ST_func)
+
+
+## Definir nó de Return, se no eval do funcblock avaliar um return, 
