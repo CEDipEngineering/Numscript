@@ -134,3 +134,42 @@ class Block():
 
     def eval(self):
         [i.eval() for i in self.children]
+
+class If():
+    def __init__(self, cond, s1) -> None:
+        self.cond = cond
+        self.true_stmt = s1
+    
+    def eval(self):
+        tf = self.cond.eval()
+        if(tf):
+            self.true_stmt.eval()
+
+class NoOp():
+    def __init__(self) -> None:
+        pass
+
+    def eval():
+        pass
+
+class IfElse():
+    def __init__(self, cond, s1, s2) -> None:
+        self.cond = cond
+        self.true_stmt = s1
+        self.false_stmt = s2
+    
+    def eval(self):
+        tf = self.cond.eval()
+        if(tf):
+            self.true_stmt.eval()
+        else:
+            self.false_stmt.eval()
+
+class While():
+    def __init__(self, cond, s) -> None:
+        self.cond = cond
+        self.stmt = s
+
+    def eval(self):
+        while(self.cond.eval()):
+            self.stmt.eval()

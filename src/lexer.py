@@ -30,11 +30,11 @@ class Lexer():
 
         # Reserved
         self.lexer.add('ASSIGN', r'\=')
-        # self.lexer.add('IF', r'$_436_0')
-        # self.lexer.add('ELSE', r'$_436_1')
-        # self.lexer.add('WHILE', r'$_436_2')
+        self.lexer.add('IF', r'\$\_436\_0')
+        self.lexer.add('ELSE', r'\$\_436\_1')
+        self.lexer.add('WHILE', r'\$\_436\_2')
         self.lexer.add('PRINT', r'\$\_436\_3')
-        # self.lexer.add('RETURN', r'$_436_5')
+        # self.lexer.add('RETURN', r'\$\_436\_5')
 
         # Types and Values
         # self.lexer.add('INT', r'$_157')

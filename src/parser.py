@@ -1,7 +1,12 @@
 from logging.config import IDENTIFIER
 from sre_constants import ASSERT
 from rply import ParserGenerator
-from ast import Sum, Number, Sub, Mult, Div, GT, LT, EQ, NE, GTE, LTE, Or, And, UnSum, UnSub, Negate, Identifier, Assign, Print, Block
+from ast import (Sum, Number, Sub, Mult, 
+                 Div, GT, LT, EQ, NE, GTE, 
+                 LTE, Or, And, UnSum, UnSub, 
+                 Negate, Identifier, Assign, 
+                 Print, Block, If, NoOp, IfElse, 
+                 While)
 
 class Parser():
     def __init__(self):
@@ -30,9 +35,9 @@ class Parser():
              'OCB', 
              'CCB', 
              'PRINT', 
-            #  'IF', 
-            #  'ELSE', 
-            #  'WHILE', 
+             'IF', 
+             'ELSE', 
+             'WHILE', 
             #  'RETURN',
             #  'INT', 
              ]
@@ -60,22 +65,47 @@ class Parser():
         #-Statement-#
         #############
         @self.pg.production('statement : SEMICOL')
-        @self.pg.production('statement : PRINT')
         def statement(p):
-            if p[0].gettokentype() == 'SEMICOL':
-                return
-            return p[0]
+            return
 
+        # Assignment statement
         @self.pg.production('statement : assignment')
         def statement(p):
             return p[0]
-        
+
+        # Block statement
+        @self.pg.production('statement : block')
+        def statement(p):
+            return p[0]
+
+
         #########
         #-Print-#
         #########
         @self.pg.production('statement : PRINT OP relexpr CP SEMICOL')
         def statement(p):
             return Print(p[2])
+
+        ##########
+        #-IfElse-#
+        ##########
+        @self.pg.production('statement : IF OP relexpr CP statement ELSE statement')
+        def statement(p):
+            return IfElse(p[2], p[4], p[6])
+
+        ######
+        #-If-#
+        ######
+        @self.pg.production('statement : IF OP relexpr CP statement')
+        def statement(p):
+            return If(p[2], p[4])
+
+        #########
+        #-While-#
+        #########
+        @self.pg.production('statement : WHILE OP relexpr CP statement')
+        def statement(p):
+            return While(p[2], p[4])
 
         ##############
         #-Assignment-#
