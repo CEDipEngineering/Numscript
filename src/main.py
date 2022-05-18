@@ -35,7 +35,7 @@ if __name__ == '__main__':
                     $9 = $9 - 1;
                 }
             }
-            $1008($0);
+            $1008($0, 0);
         }
         ''',
     ]
@@ -45,7 +45,7 @@ if __name__ == '__main__':
         lexer = Lexer().get_lexer()
         tokens = lexer.lex(text_input)
         print('\nEXPERIMENT:\n', text_input)
-        print('\nTokens:', list(lexer.lex(text_input)))
+        # print('\nTokens:', list(lexer.lex(text_input)))
         # Create parser
         pg = Parser()
         pg.parse()

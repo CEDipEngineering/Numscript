@@ -180,7 +180,7 @@ class Def():
         self.args.append(val)
 
     def eval(self, ST):
-        # print(f'Function defined with: {self.args=},{self.block=}')
+        # print(f'Function defined with: {self.args=},{str(self.block)=}')
         ST.assign(self.name, (self.args, self.block))
 
 class Call():
@@ -201,8 +201,9 @@ class Call():
             raise Exception("Invalid Function Call")
         ST_func = SymbolTable(ST)
         if len(self.params) != 0:
-            for arg, par in zip(args[0], self.params):
-                print(args, par)
-                ST_func.assign(arg, par.eval())
+            # print(f'{self.params=}')
+            for arg, par in zip(args[0], self.params[0]):
+                # print(arg, par)
+                ST_func.assign(arg, par.eval(ST))
         # print(block.children)
         block.eval(ST_func)
