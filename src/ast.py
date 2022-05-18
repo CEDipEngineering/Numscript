@@ -1,19 +1,12 @@
+
 class SymbolTable():
-    def __init__(self):
-        self._table = {}
-        # self._reservedWords = ['printf', 'while', 'if', 'else', 'scanf']
-
-    # def isReserved(self, name):
-    #     return name in self._reservedWords
-
-    # def declare(self, name, typ):
-    #     if name in self._table.keys():
-    #         raise Exception(f"Variable {name} already declared")
-    #     self._table[name] = (None, typ)
+    def __init__(self, ST = None):
+        if ST is None:
+            self._table = {}
+        else:
+            self._table = dict(ST._table) # Force a copy, beacuse python
         
     def assign(self, name, value):
-        # if name not in self._table.keys():
-        #     raise Exception(f"Local variable {name} assigned before declaration")
         self._table[name] = value       
 
     def retrieve(self, name):
@@ -22,14 +15,11 @@ class SymbolTable():
         except Exception:
             raise NameError("Variable '{0}' referenced before assignment".format(name))
 
-
-ST = SymbolTable()
-
 class Number():
     def __init__(self, value) -> None:
         self.value = value
 
-    def eval(self):
+    def eval(self, ST):
         return int(self.value)
 
 ## Bin Ops
@@ -39,52 +29,52 @@ class BinOp():
         self.rhs = rhs
 
 class Sum(BinOp):
-    def eval(self):
-        return self.lhs.eval()+self.rhs.eval()
+    def eval(self, ST):
+        return self.lhs.eval(ST)+self.rhs.eval(ST)
 
 class Sub(BinOp):
-    def eval(self):
-        return self.lhs.eval()-self.rhs.eval()
+    def eval(self, ST):
+        return self.lhs.eval(ST)-self.rhs.eval(ST)
 
 class Mult(BinOp):
-    def eval(self):
-        return self.lhs.eval()*self.rhs.eval()
+    def eval(self, ST):
+        return self.lhs.eval(ST)*self.rhs.eval(ST)
 
 class Div(BinOp):
-    def eval(self):
-        return self.lhs.eval()//self.rhs.eval()
+    def eval(self, ST):
+        return self.lhs.eval(ST)//self.rhs.eval(ST)
 
 class LT(BinOp):
-    def eval(self):
-        return int(self.lhs.eval()<self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST)<self.rhs.eval(ST))
 
 class GT(BinOp):
-    def eval(self):
-        return int(self.lhs.eval()>self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST)>self.rhs.eval(ST))
 
 class EQ(BinOp):
-    def eval(self):
-        return int(self.lhs.eval()==self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST)==self.rhs.eval(ST))
 
 class NE(BinOp):
-    def eval(self):
-        return int(self.lhs.eval()!=self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST)!=self.rhs.eval(ST))
 
 class LTE(BinOp):
-    def eval(self):
-        return int(self.lhs.eval()<=self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST)<=self.rhs.eval(ST))
 
 class GTE(BinOp):
-    def eval(self):
-        return int(self.lhs.eval()>=self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST)>=self.rhs.eval(ST))
 
 class Or(BinOp):
-    def eval(self):
-        return int(self.lhs.eval() or self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST) or self.rhs.eval(ST))
 
 class And(BinOp):
-    def eval(self):
-        return int(self.lhs.eval() and self.rhs.eval())
+    def eval(self, ST):
+        return int(self.lhs.eval(ST) and self.rhs.eval(ST))
 
 # Unary Operators
 class UnOp():
@@ -92,38 +82,38 @@ class UnOp():
         self.value = value
 
 class UnSub(UnOp):
-    def eval(self):
-        return -self.value.eval()
+    def eval(self, ST):
+        return -self.value.eval(ST)
 
 class UnSum(UnOp):
-    def eval(self):
-        return self.value.eval()
+    def eval(self, ST):
+        return self.value.eval(ST)
 
 class Negate(UnOp):
-    def eval(self):
-        return int(not self.value.eval())
+    def eval(self, ST):
+        return int(not self.value.eval(ST))
 
 class Assign():
     def __init__(self, name, value):
         self.value = value
         self.name = name
 
-    def eval(self):
-        ST.assign(self.name, self.value.eval())
+    def eval(self, ST):
+        ST.assign(self.name, self.value.eval(ST))
 
 class Identifier():
     def __init__(self, name) -> None:
         self.name = name
 
-    def eval(self):
+    def eval(self, ST):
         return ST.retrieve(self.name)
 
 class Print():
     def __init__(self, value) -> None:
         self.value = value
 
-    def eval(self):
-        print(self.value.eval())
+    def eval(self, ST):
+        print(self.value.eval(ST))
 
 class Block():
     def __init__(self, stmt) -> None:
@@ -132,18 +122,21 @@ class Block():
     def append(self, val):
         self.children.append(val)
 
-    def eval(self):
-        [i.eval() for i in self.children]
+    def eval(self, ST):
+        [i.eval(ST) for i in self.children]
+
+    def __str__(self):
+        return f'Block: {self.children}'
 
 class If():
     def __init__(self, cond, s1) -> None:
         self.cond = cond
         self.true_stmt = s1
     
-    def eval(self):
-        tf = self.cond.eval()
+    def eval(self, ST):
+        tf = self.cond.eval(ST)
         if(tf):
-            self.true_stmt.eval()
+            self.true_stmt.eval(ST)
 
 class NoOp():
     def __init__(self) -> None:
@@ -158,18 +151,58 @@ class IfElse():
         self.true_stmt = s1
         self.false_stmt = s2
     
-    def eval(self):
-        tf = self.cond.eval()
+    def eval(self, ST):
+        tf = self.cond.eval(ST)
         if(tf):
-            self.true_stmt.eval()
+            self.true_stmt.eval(ST)
         else:
-            self.false_stmt.eval()
+            self.false_stmt.eval(ST)
 
 class While():
     def __init__(self, cond, s) -> None:
         self.cond = cond
         self.stmt = s
 
-    def eval(self):
-        while(self.cond.eval()):
-            self.stmt.eval()
+    def eval(self, ST):
+        while(self.cond.eval(ST)):
+            self.stmt.eval(ST)
+
+class Def():
+    def __init__(self, name, args, block) -> None:
+        self.name = name
+        self.block = block
+        if args:
+            self.args = [args]
+        else:
+            self.args = []
+
+    def args_append(self, val):
+        self.args.append(val)
+
+    def eval(self, ST):
+        # print(f'Function defined with: {self.args=},{self.block=}')
+        ST.assign(self.name, (self.args, self.block))
+
+class Call():
+    def __init__(self, name, params) -> None:
+        self.name = name
+        if params:
+            self.params = [params]
+        else:
+            self.params = []
+
+    def params_append(self, val):
+        self.params.append(val)
+
+    def eval(self, ST):
+        func = ST.retrieve(self.name)
+        args, block = func
+        if len(args) != len(self.params):
+            raise Exception("Invalid Function Call")
+        ST_func = SymbolTable(ST)
+        if len(self.params) != 0:
+            for arg, par in zip(args[0], self.params):
+                print(args, par)
+                ST_func.assign(arg, par.eval())
+        # print(block.children)
+        block.eval(ST_func)

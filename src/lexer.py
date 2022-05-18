@@ -37,7 +37,8 @@ class Lexer():
         # self.lexer.add('RETURN', r'\$\_436\_5')
 
         # Types and Values
-        # self.lexer.add('INT', r'$_157')
+        self.lexer.add('COMMA', r'\,')
+        self.lexer.add('DEF', r'\$\_436')
         self.lexer.add('NUMBER', r'\d+')
         self.lexer.add('SEMICOL', r'\;')
         self.lexer.add('IDENTIFIER', r'\$[0-9_]+')

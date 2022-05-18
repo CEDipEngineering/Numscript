@@ -6,7 +6,7 @@ from ast import (Sum, Number, Sub, Mult,
                  LTE, Or, And, UnSum, UnSub, 
                  Negate, Identifier, Assign, 
                  Print, Block, If, NoOp, IfElse, 
-                 While)
+                 While, Def, Call)
 
 class Parser():
     def __init__(self):
@@ -38,8 +38,9 @@ class Parser():
              'IF', 
              'ELSE', 
              'WHILE', 
+             'DEF', 
+             'COMMA',
             #  'RETURN',
-            #  'INT', 
              ]
         )
 
@@ -66,7 +67,16 @@ class Parser():
         #############
         @self.pg.production('statement : SEMICOL')
         def statement(p):
-            return
+            return NoOp()
+
+        # Funcdef statement
+        @self.pg.production('statement : funcdef')
+        def statement(p):
+            return p[0]
+
+        @self.pg.production('statement : call')
+        def statement(p):
+            return p[0]
 
         # Assignment statement
         @self.pg.production('statement : assignment')
@@ -78,7 +88,27 @@ class Parser():
         def statement(p):
             return p[0]
 
+        #######
+        #-Def-#
+        #######
+        @self.pg.production('funcdef : DEF IDENTIFIER OP identifiers CP block')
+        def funcdef(p):
+            return Def(p[1].getstr(), p[3], p[5])
 
+        # Function with no args
+        @self.pg.production('funcdef : DEF IDENTIFIER OP CP block')
+        def funcdef(p):
+            return Def(p[1].getstr(), 0, p[4])
+
+        @self.pg.production('identifiers : IDENTIFIER')
+        def identifiers(p):
+            return [p[0].getstr()]
+        
+        @self.pg.production('identifiers : identifiers COMMA IDENTIFIER')
+        def identifiers(p):
+            p[0].append(p[2].getstr())
+            return p[0]
+        
         #########
         #-Print-#
         #########
@@ -106,6 +136,26 @@ class Parser():
         @self.pg.production('statement : WHILE OP relexpr CP statement')
         def statement(p):
             return While(p[2], p[4])
+
+        ########
+        #-Call-#
+        ########
+        @self.pg.production('call : IDENTIFIER OP relexprs CP SEMICOL')
+        def factor(p):
+            return Call(p[0].getstr(), p[2])
+
+        @self.pg.production('call : IDENTIFIER OP CP SEMICOL')
+        def factor(p):
+            return Call(p[0].getstr(), 0)
+
+        @self.pg.production('relexprs : relexpr')
+        def relexprs(p):
+            return [p[0]]
+        
+        @self.pg.production('relexprs : relexprs COMMA relexpr')
+        def relexprs(p):
+            p[0].append(p[2])
+            return p[0]
 
         ##############
         #-Assignment-#
@@ -207,7 +257,6 @@ class Parser():
         #-Factor-#
         ##########
         # Single token
-        # @self.pg.production('factor : CALL')
         @self.pg.production('factor : NUMBER')
         @self.pg.production('factor : IDENTIFIER')
         def factor(p):
@@ -215,9 +264,7 @@ class Parser():
             if valType == 'NUMBER':
                 return Number(p[0].getstr())
             elif valType == 'IDENTIFIER':
-                return Identifier(p[0].getstr())
-            # elif valType == 'CALL':
-            #     return 
+                return Identifier(p[0].getstr()) 
             else:
                 raise Exception('This is bad too m8')
 
