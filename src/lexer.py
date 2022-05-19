@@ -34,7 +34,7 @@ class Lexer():
         self.lexer.add('ELSE', r'\$\_436\_1')
         self.lexer.add('WHILE', r'\$\_436\_2')
         self.lexer.add('PRINT', r'\$\_436\_3')
-        # self.lexer.add('RETURN', r'\$\_436\_5')
+        self.lexer.add('RETURN', r'\$\_436\_4')
 
         # Types and Values
         self.lexer.add('COMMA', r'\,')

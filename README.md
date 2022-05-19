@@ -11,16 +11,21 @@ Inspired by Marcelo Andrade's (Tupy)[https://github.com/marcelogdeandrade/TupyLa
 
     BLOCK = '{' , { STATEMENT }, '}' ;
 
-    FUNCTION = $_436 , IDENTIFIER, '(', TYPE, IDENTIFIER, {',', TYPE, IDENTIFIER}, ')', BLOCK ; 
+    FUNCDEF = $_436 , IDENTIFIER, '(', TYPE, IDENTIFIER, {',', TYPE, IDENTIFIER}, ')', FUNCBLOCK ; 
 
-    STATEMENT = ( λ | ASSIGNMENT | PRINT | DECLARATION | $_436_5, RELEXPRESSION ), ';';
-                | (BLOCK | WHILE | IF | FUNCTION);
+    FUNCBLOCK = '{', {FUNCSTATEMENT}, '}' ;
 
-    FACTOR = NUMBER 
+    FUNCSTATEMENT = (STATEMENT | $_436_5, RELEXPRESSION, ';' );
+
+    STATEMENT = ( λ | ASSIGNMENT | PRINT | DECLARATION ), ';';
+                | (BLOCK | WHILE | IF | FUNCDEF);
+
+    FACTOR =  NUMBER 
+            | CALL;
             | IDENTIFIER  
             | ( ( '+' | '-' | '!' ) , FACTOR )  
-            | '(' , RELEXPRESSION , ')'
-            | CALL;
+            | '(' , RELEXPRESSION , ')' 
+            ;
 
     CALL = IDENT, '(', λ | RELEXPRESSION, {',', RELEXRESSION}, ')', ';';
 
@@ -53,5 +58,5 @@ Inspired by Marcelo Andrade's (Tupy)[https://github.com/marcelogdeandrade/TupyLa
 | $_436_1       	|  else          	                    |
 | $_436_2       	|  while      	                        |
 | $_436_3       	|  print      	                        |
-| $_436_5       	|  return      	                        |
+| $_436_4       	|  return      	                        |
 | $_436            	|  def      	                        |

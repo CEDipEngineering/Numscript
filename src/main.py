@@ -63,6 +63,14 @@ if __name__ == '__main__':
             $1008($0, $1);
         }
         ''', # Function that loops through i=x;i>y;i-- printing i
+        '''
+        {
+            $_436 $1008(){
+                $_436_4 10 ;
+            }
+            $1008();
+        }
+        ''', # Function that returns 10;
     ]
 
     for text_input in in_list:
@@ -70,12 +78,12 @@ if __name__ == '__main__':
         lexer = Lexer().get_lexer()
         tokens = lexer.lex(text_input)
         print('\nEXPERIMENT:\n', text_input)
-        # print('\nTokens:', list(lexer.lex(text_input)))
+        print('\nTokens:', list(lexer.lex(text_input)))
         # Create parser
         pg = Parser()
         pg.parse()
         parser = pg.get_parser()
         ast = parser.parse(tokens)
-        # print(ast)
+        print(ast)
         print(f'\nOutput: {ast.eval(Global_ST)}')
         # print('\n', Global_ST._table)

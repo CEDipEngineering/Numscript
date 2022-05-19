@@ -183,6 +183,12 @@ class Def():
         # print(f'Function defined with: {self.args=},{str(self.block)=}')
         ST.assign(self.name, (self.args, self.block))
 
+    def __str__(self):
+        return str(self.block)
+
+    def __repr__(self):
+        return str(self)
+
 class Call():
     def __init__(self, name, params) -> None:
         self.name = name
@@ -208,5 +214,33 @@ class Call():
         # print(block.children)
         block.eval(ST_func)
 
+class Funcblock():
+    def __init__(self, stmt) -> None:
+        self.children = [stmt]
+
+    def append(self, val):
+        self.children.append(val)
+
+    def eval(self, ST):
+        [i.eval(ST) for i in self.children]
+
+    def __str__(self):
+        return f'Funcblock: {self.children}'
+
+    def __repr__(self):
+        return str(self)
+
+class Return():
+    def __init__(self, expr) -> None:
+        self.expr = expr
+
+    def eval(self, ST):
+        self.expr.eval(ST)
+
+    def __str__(self):
+        return f'Return node for: {self.expr}'
+
+    def __repr__(self):
+        return str(self)
 
 ## Definir nó de Return, se no eval do funcblock avaliar um return, 
