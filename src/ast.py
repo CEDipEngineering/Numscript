@@ -101,6 +101,12 @@ class Assign():
     def eval(self, ST):
         ST.assign(self.name, self.value.eval(ST))
 
+    def __str__(self):
+        return "[Assignment: {0}={1}]".format(self.name, self.value)
+
+    def __repr__(self):
+        return str(self)
+
 class Identifier():
     def __init__(self, name) -> None:
         self.name = name
@@ -180,7 +186,6 @@ class Def():
         self.args.append(val)
 
     def eval(self, ST):
-        # print(f'Function defined with: {self.args=},{str(self.block)=}')
         ST.assign(self.name, (self.args, self.block))
 
     def __str__(self):
@@ -207,12 +212,10 @@ class Call():
             raise Exception("Invalid Function Call")
         ST_func = SymbolTable(ST)
         if len(self.params) != 0:
-            # print(f'{self.params=}')
             for arg, par in zip(args[0], self.params[0]):
-                # print(arg, par)
                 ST_func.assign(arg, par.eval(ST))
-        # print(block.children)
-        block.eval(ST_func)
+        return block.eval(ST_func)
+
 
 class Funcblock():
     def __init__(self, stmt) -> None:
@@ -222,7 +225,11 @@ class Funcblock():
         self.children.append(val)
 
     def eval(self, ST):
-        [i.eval(ST) for i in self.children]
+        for i in self.children:
+            if type(i) is Return:
+                return i.eval(ST)
+            i.eval(ST)
+        return
 
     def __str__(self):
         return f'Funcblock: {self.children}'
@@ -235,7 +242,7 @@ class Return():
         self.expr = expr
 
     def eval(self, ST):
-        self.expr.eval(ST)
+        return self.expr.eval(ST)
 
     def __str__(self):
         return f'Return node for: {self.expr}'

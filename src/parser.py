@@ -113,19 +113,24 @@ class Parser():
             self.curr = "funcblock"
             return p[1]
 
-        @self.pg.production('funcstatements : RETURN relexpr SEMICOL')
-        def funcstatements(p):
-            self.curr = "funcstatements"
-            return Funcblock(Return(p[1]))
-        
-        @self.pg.production('funcstatements : statement')
+        @self.pg.production('funcstatements : funcstatement')
         def funcstatements(p):
             self.curr = "funcstatements"
             return Funcblock(p[0])
+        
+        @self.pg.production('funcstatement : RETURN relexpr SEMICOL')
+        def funcstatement(p):
+            self.curr = "funcstatement"
+            return Return(p[1])
 
-        @self.pg.production('funcstatements : funcstatements statement')
-        def funcstatements(p):
-            self.curr = "funcstatements"
+        @self.pg.production('funcstatement : statement')
+        def funcstatement(p):
+            self.curr = "funcstatement"
+            return p[0]
+
+        @self.pg.production('funcstatement : funcstatements statement')
+        def funcstatement(p):
+            self.curr = "funcstatement"
             p[0].append(p[1])
             return p[0]
         
@@ -309,6 +314,19 @@ class Parser():
         ##########
         #-Factor-#
         ##########
+        # Call with return and no args
+        @self.pg.production('factor : IDENTIFIER OP CP')
+        def factor(p):
+            self.curr = "factor"
+            return Call(p[0].getstr(), 0)
+        
+        # Call with return and no args
+        @self.pg.production('factor : IDENTIFIER OP relexprs CP')
+        def factor(p):
+            self.curr = "factor"
+            return Call(p[0].getstr(), p[2])
+
+
         # Single token
         @self.pg.production('factor : NUMBER')
         @self.pg.production('factor : IDENTIFIER')

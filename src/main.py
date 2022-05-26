@@ -68,9 +68,40 @@ if __name__ == '__main__':
             $_436 $1008(){
                 $_436_4 10 ;
             }
-            $1008();
+            $0 = $1008();
+            $_436_3($0);
         }
-        ''', # Function that returns 10;
+        ''', # Function with no arguments that returns 10;
+        '''
+        {
+            $_436 $1008($0){
+                $_436_4 $0 + 1 ;
+            }
+            $0 = $1008(2);
+            $_436_3($0);
+        }
+        ''', # Function with one argument that returns argument plus one;
+        '''
+        {
+            $_436 $1008($0, $2){
+                $_436_4 $0 * $2 ;
+            }
+            $0 = $1008(2, 10);
+            $_436_3($0);
+        }
+        ''', # Function with two arguments that returns their product;
+        '''
+        {
+            $_436 $1008($0){
+                $_436_0($0 > 0){
+                    $_436_3($0);
+                    $1008($0 - 1);
+                }
+                $_436_3($0);
+            }
+            $1008(10);
+        }
+        ''', # Recursive function, that counts from input down to 0, then back up to input.
     ]
 
     for text_input in in_list:
@@ -78,12 +109,12 @@ if __name__ == '__main__':
         lexer = Lexer().get_lexer()
         tokens = lexer.lex(text_input)
         print('\nEXPERIMENT:\n', text_input)
-        print('\nTokens:', list(lexer.lex(text_input)))
+        # print('\nTokens:', list(lexer.lex(text_input)))
         # Create parser
         pg = Parser()
         pg.parse()
         parser = pg.get_parser()
         ast = parser.parse(tokens)
-        print(ast)
-        print(f'\nOutput: {ast.eval(Global_ST)}')
+        # print(ast)
+        ast.eval(Global_ST)
         # print('\n', Global_ST._table)
