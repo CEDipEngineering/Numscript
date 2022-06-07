@@ -60,7 +60,7 @@ Inspired by Marcelo Andrade's [Tupy](https://github.com/marcelogdeandrade/TupyLa
 
 # Reserved identifiers
 
-| Symbol 	        | Python Equivalent                          |
+| Symbol 	        | Python Equivalent                     |
 |:-----------------:|:-------------------------------------:|
 | $_436_0        	|  if        	                        |
 | $_436_1       	|  else          	                    |
